@@ -12,15 +12,16 @@
 {{#include ../../examples/01_02_why_async/src/lib.rs:17:25}}
 ```
 
-This works fine for many applications-- after all, threads were designed
-to do just this: run multiple different tasks at once. However, they also
-come with some limitations. There's a lot of overhead involved in the
-process of switching between different threads and sharing data between
-threads. Even a thread which just sits and does nothing uses up valuable
-system resources. These are the costs that asynchronous code is designed
-to eliminate. We can rewrite the function above using Rust's
-`async`/`.await` notation, which will allow us to run multiple tasks at
-once without creating multiple threads:
+Для многих приложений это замечательно работает - в конце концов, 
+потоки были разработаны именно для этого: запускать несколько 
+разных задач одновременно. Однако, они имеют некоторые 
+ограничения. В процессе переключения между разными потоками и 
+обменом данными между ними возникает много накладных расходов. 
+Даже поток, который сидит и ничего не делает, использует ценные 
+системные ресурсы. Асинхронный код предназначен для устранения 
+этих проблем. Мы можем переписать функции выше используя Rust 
+нотацию `async`/`.await`, которая позволяет 
+нам запустить несколько задач одновременно, не создавая несколько потоков:
 
 ```rust
 {{#include ../../examples/01_02_why_async/src/lib.rs:31:39}}
@@ -39,9 +40,10 @@ once without creating multiple threads:
 возвращает `Future`. Для выполнения тела функции, 
 возвращённая `Future` должна быть завершена.
 
-It's important to remember that traditional threaded applications can be quite
-effective, and that Rust's small memory footprint and predictability mean that
-you can get far without ever using `async`. The increased complexity of the
-asynchronous programming model isn't always worth it, and it's important to
-consider whether your application would be better served by using a simpler
-threaded model.
+Важно помнить, что традиционные приложения с потоками могут 
+быть вполне эффективными и предсказуемость Rust и небольшой 
+объём памяти могут значить, что вы можете далеко продвинуться 
+без использования `async`. Повышенная сложность 
+асинхронной модели программирования не всегда стоит этого и 
+важно понимать, когда ваше приложения будет лучше работать с 
+использованием просто поточной модели.
