@@ -1,11 +1,13 @@
 # Пример `async`/`.await`
 
-`async`/`.await` is Rust's built-in tool for writing asynchronous functions
-that look like synchronous code. `async` transforms a block of code into a
-state machine that implements a trait called `Future`. Whereas calling a
-blocking function in a synchronous method would block the whole thread,
-blocked `Future`s will yield control of the thread, allowing other
-`Future`s to run.
+`async`/`.await` - это встроенные в Rust 
+инструменты для написания асинхронного кода. 
+`async` преобразует блок кода в конечный автомат, 
+который реализует типаж, зовущийся `Future`. В то 
+время как вызов блокирующей функции в синхронном методе 
+заблокирует весь поток, блокировка `Future` вернёт 
+контроль над потоком, позволяя работать другим 
+`Future`.
 
 Для создания асинхронной функции, вы можете использовать 
 синтаксис `async fn`:
