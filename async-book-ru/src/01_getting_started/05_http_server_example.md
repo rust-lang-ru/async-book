@@ -78,12 +78,14 @@ HTTP-клиент Hyper'а.
 {{#include ../../examples/01_05_http_server/src/lib.rs:89:97}}
 ```
 
-`Client::get` returns a `hyper::client::FutureResponse`, which implements
-`Future<Output = Result<Response, Error>>`
-(or `Future<Item = Response, Error = Error>` in futures 0.1 terms).
-When we `.await` that future, an HTTP request is sent out, the current task
-is suspended, and the task is queued to be continued once a response has
-become available.
+`Client::get` возвращает 
+`hyper::client::FutureResponse`, который реализует 
+`Future<Output = Result<Response, Error>>` 
+(или `Future<Item = Response, Error = Error>` в 
+терминах `futures` 0.1). Когда мы разрешаем (`.await`) 
+футуру, отправляется HTTP-запрос, текущая задача 
+приостанавливается и становится в очередь, чтобы продолжить 
+работу после получения ответа.
 
 Если вы сейчас запустите `cargo run` и откроете 
 `http://127.0.0.1:3000/foo` в браузере, вы увидите 
