@@ -10,14 +10,17 @@
 процессе перехода к недавно стабилизированному API, после чего 
 мешанина будет значительно уменьшена.
 
-At the moment, however, the ecosystem is still undergoing rapid development
-and the asynchronous Rust experience is unpolished. Most libraries still
-use the 0.1 definitions of the `futures` crate, meaning that to interoperate
-developers frequently need to reach for the `compat` functionality from the
-0.3 `futures` crate. The `async`/`await` language feature is still new.
-Important extensions like `async fn` syntax in trait methods are still
-unimplemented, and the current compiler error messages can be difficult to
-parse.
+Тем не менее, сейчас экосистема всё ещё находится в стадии 
+активной разработки и асинхронный опыт в Rust не отполирован. 
+Многие библиотеки до сих пор используют пакет 
+`futures` версии 0.1, а это значит, что для 
+взаимодействия с ними разработчикам часто требуется 
+функциональность `compat` из пакета 
+`futures` версии 0.3. `async`
+/`await` до сих пор новы. Важное расширение 
+синтаксиса, как `async fn`, для методов типажей до 
+сих пор не реализовано, и текущие сообщения компилятора об 
+ошибках могут быть сложны для восприятия.
 
 Это говорит о том, что Rust на пути к более эффективной и 
 эргономичной поддержке асинхронного программирования и если 
