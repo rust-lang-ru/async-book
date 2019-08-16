@@ -29,18 +29,18 @@ This adds support for the nightly-only but soon-to-be-stabilized
 Additionally, we have some imports to add:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:4:27}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:imports}}
 ```
 
 Once the imports are out of the way, we can start putting together the
 boilerplate to allow us to serve requests:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:29:72}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:boilerplate}}
 ```
 
 If you `cargo run` now, you should see the message "Listening on
-http://127.0.0.1:300" printed on your terminal. If you open that URL in your
+http://127.0.0.1:3000" printed on your terminal. If you open that URL in your
 browser of choice, you'll see "hello, world!" appear in your browser.
 Congratulations! You just wrote your first asynchronous webserver in Rust.
 
@@ -61,14 +61,14 @@ request to another website using Hyper's HTTP client.
 We start by parsing out the URL we want to request:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:89:90}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:parse_url}}
 ```
 
 Then we can create a new `hyper::Client` and use it to make a `GET` request,
 returning the response to the user:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:89:97}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:get_request}}
 ```
 
 `Client::get` returns a `hyper::client::FutureResponse`, which implements
