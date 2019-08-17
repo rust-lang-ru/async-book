@@ -19,7 +19,7 @@ async fn do_something() { ... }
 Значение, возвращённое`async fn` - `Future`. Что бы ни произошло, `Future` должна быть запущена в исполнителе.
 
 ```rust
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:7:19}}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:hello_world}}
 ```
 
 Внутри `async fn` вы можете использовать 
@@ -44,7 +44,7 @@ async fn dance() { ... }
 Один из путей учиться, петь и танцевать - останавливаться на каждом из них:
 
 ```rust
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:32:36}}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_each}}
 ```
 
 Тем не менее, в этом случае мы не получаем наилучшей 
@@ -55,7 +55,7 @@ async fn dance() { ... }
 `async fn`, которые могут запуститься параллельно:
 
 ```rust
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:44:66}}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_main}}
 ```
 
 В этом примере, запоминание песни должно быть сделано до 
