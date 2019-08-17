@@ -31,18 +31,18 @@
 Дополнительно импортируем некоторые вещи:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:4:27}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:imports}}
 ```
 
 Как только закончим с импортами, мы можем собрать вместе весь
 шаблонный код, который позволит обрабатывать запросы:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:29:72}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:boilerplate}}
 ```
 
 Если вы сейчас запустите `cargo run`, в консоли вы 
-увидите сообщение "Listening on http://127.0.0.1:300". Если вы 
+увидите сообщение "Listening on http://127.0.0.1:3000". Если вы 
 откроете URL в вашем любимом браузере, вы увидите как в нём 
 отобразится "hello, world!". Поздравляем! Вы только что написали 
 свой первый асинхронный web-сервер на Rust.
@@ -67,7 +67,7 @@ HTTP-клиент Hyper'а.
 Мы начнём с парсинга URL, который мы хотим запросить:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:89:90}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:parse_url}}
 ```
 
 Затем мы создадим новый `hyper::Client` и 
@@ -75,7 +75,7 @@ HTTP-клиент Hyper'а.
 вернём пользователю ответ:
 
 ```rust
-{{#include ../../examples/01_05_http_server/src/lib.rs:89:97}}
+{{#include ../../examples/01_05_http_server/src/lib.rs:get_request}}
 ```
 
 `Client::get` возвращает 
