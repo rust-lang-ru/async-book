@@ -15,17 +15,15 @@
 знает, что задача, связанная с `Waker`, готова к выполнению, и
 в будущем должна быть опрошена снова.
 
-`Waker` also implements `clone()` so that it can be copied around and stored.
+`Waker` так же реализует `clone()`. Так вы можете его копировать где необходимо и хранить.
 
-Let's try implementing a simple timer future using `Waker`.
+Давайте попробуем реализовать простой таймер с использованием `Waker`.
 
-## Applied: Build a Timer
+## Применение: Создание таймера
 
-For the sake of the example, we'll just spin up a new thread when the timer
-is created, sleep for the required time, and then signal the timer future
-when the time window has elapsed.
+В качестве примера, мы просто раскручиваем новый поток при создании таймера, спим в течение необходимого времени, а затем сообщаем о том когда время таймера истечёт.
 
-Here are the imports we'll need to get started:
+Вот список зависимостей, которые нам понадобятся для начала:
 
 ```rust
 {{#include ../../examples/02_03_timer/src/lib.rs:imports}}
@@ -38,7 +36,7 @@ Here are the imports we'll need to get started:
 {{#include ../../examples/02_03_timer/src/lib.rs:timer_decl}}
 ```
 
-Now, let's actually write the `Future` implementation!
+Теперь давайте напишем реализацию `Future`!
 
 ```rust
 {{#include ../../examples/02_03_timer/src/lib.rs:future_for_timer}}
@@ -49,7 +47,7 @@ Now, let's actually write the `Future` implementation!
 Важно отметить, что мы должны обновлять `Waker` каждый раз, когда `future` опрашивается, потому что `future` может быть перемещена в другую задачу с другим `Waker`.
 Это может произойти когда футуры передаются между задачами после опроса.
 
-Finally, we need the API to actually construct the timer and start the thread:
+Наконец, нам нужен API, чтобы фактически построить таймер и запустить поток:
 
 ```rust
 {{#include ../../examples/02_03_timer/src/lib.rs:timer_new}}
