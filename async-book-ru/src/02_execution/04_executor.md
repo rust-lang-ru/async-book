@@ -9,8 +9,7 @@
 
 В этом разделе мы напишем нашего собственного простого исполнителя, способного одновременно запускать большое количество future верхнего уровня.
 
-For this example, we depend on the `futures` crate for the `ArcWake` trait,
-which provides an easy way to construct a `Waker`.
+В этом примере мы зависим от пакета `futures`, в котором определен типаж `ArcWake`. Данный типаж предоставляет простой способ для создания `Waker`.
 
 ```toml
 [package]
@@ -23,7 +22,7 @@ edition = "2018"
 futures-preview = "=0.3.0-alpha.17"
 ```
 
-Next, we need the following imports at the top of `src/main.rs`:
+Дальше, мы должны в верней части файла `src/main.rs` разместить следующий список зависимостей:
 
 ```rust
 {{#include ../../examples/02_04_executor/src/lib.rs:imports}}
@@ -46,31 +45,29 @@ Next, we need the following imports at the top of `src/main.rs`:
 {{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
-To poll futures, we'll need to create a `Waker`.
-As discussed in the [task wakeups section](./03_wakeups.md), `Waker`s are responsible
-for scheduling a task to be polled again once `wake` is called. Remember that
-`Waker`s tell the executor exactly which task has become ready, allowing
-them to poll just the futures that are ready to make progress. The easiest way
-to create a new `Waker` is by implementing the `ArcWake` trait and then using
-the `waker_ref` or `.into_waker()` functions to turn an `Arc<impl ArcWake>`
-into a `Waker`. Let's implement `ArcWake` for our tasks to allow them to be
-turned into `Waker`s and awoken:
+Чтобы опросить `futures`, нам нужно создать `Waker`.
+Как описано в разделе [задачи пробуждения](./03_wakeups.md), `Waker`s отвечают
+за планирование задач, которые будут опрошены снова после вызова `wake`. `Waker`s сообщают исполнителю, какая именно задача завершилась, позволяя
+опрашивать как раз те `futures`, которые готовы к продолжению выполнения. Простой способ
+создать новый `Waker`, необходимо реализовать типаж `ArcWake`, а затем использовать
+`waker_ref` или `.into_waker()` функции для преобразования `Arc & lt;impl ArcWake & gt;`
+в `Waker`. Давайте реализуем `ArcWake` для наших задач, чтобы они были
+превращены в `Waker`s и могли пробуждаться:
 
 ```rust
 {{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
 ```
 
-When a `Waker` is created from an `Arc<Task>`, calling `wake()` on it will
-cause a copy of the `Arc` to be sent onto the task channel. Our executor then
-needs to pick up the task and poll it. Let's implement that:
+Когда `Waker` создается на основе `Arc<Task>`, вызывая `wake()` это
+вызовит отправку копии `Arc` в канал задач. Тогда нашуму исполнителю 
+нужно подобрать задание и опросить его. Давайте реализуем это:
 
 ```rust
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_run}}
 ```
 
-Congratulations! We now have a working futures executor. We can even use it
-to run `async/.await` code and custom futures, such as the `TimerFuture` we
-wrote earlier:
+Поздравляю! Теперь у нас есть работающий исполнитель `futures`. Мы даже можем использовать его
+для запуска `async/.await` кода и пользовательских `futures`, таких как `TimerFuture` которую мы описали ранее:
 
 ```rust
 {{#include ../../examples/02_04_executor/src/lib.rs:main}}
