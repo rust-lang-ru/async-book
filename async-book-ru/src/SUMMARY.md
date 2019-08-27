@@ -11,7 +11,7 @@
     - [Применение: создание исполнителя](02_execution/04_executor.md)
     - [Исполнители и системный ввод/вывод](02_execution/05_io.md)
 - [`async`/`await`](03_async_await/01_chapter.md)
-- [Запрет перемещения (pinning)](04_pinning/01_chapter.md)
+- [Закрепление (pinning)](04_pinning/01_chapter.md)
 - [Потоки](05_streams/01_chapter.md)
     - [Итерирование и параллелизм](05_streams/02_iteration_and_concurrency.md)
 - [Одновременное выполнение нескольких `Future` ](06_multiple_futures/01_chapter.md)
