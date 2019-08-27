@@ -1,16 +1,16 @@
 # Закрепление (pinning)
 
-To poll futures, they must be pinned using a special type called
-`Pin<T>`. If you read the explanation of [the `Future` trait](../02_execution/02_future.md) in the
-previous section ["Executing `Future`s and Tasks"](../02_execution/01_chapter.md), you'll recognise
-`Pin` from the `self: Pin<&mut Self>` in the `Future:poll` method's definition.
-But what does it mean, and why do we need it?
+Чтобы опросить `futures`, они должны быть закреплены с помощью специального типа под названием
+`Pin<T>`. Если Вы прочитаете описание [ типажа `Future` ](../02_execution/02_future.md) в
+предыдущем разделе [ "выполнение `Futures` и задач"](../02_execution/01_chapter.md), вы узнаете о
+`Pin` из `self: Pin<&mut Self>` в методе`Future:poll`.
+Но что это значит, и зачем нам это нужно?
 
 ## Для чего перемещение
 
-Pinning makes it possible to guarantee that an object won't ever be moved.
-To understand why this is necessary, we need to remember how `async`/`.await`
-works. Consider the following code:
+Закрепление даёт гарантию того, что объект не будет перемещён.
+Чтобы понять почему это важно, нам надо помнить как работает `async`/`.await`. 
+Рассмотрим следующий код:
 
 ```rust
 let fut_one = ...;
@@ -58,10 +58,12 @@ impl Future for AsyncFuture {
 }
 ```
 
-When `poll` is first called, it will poll `fut_one`. If `fut_one` can't
-complete, `AsyncFuture::poll` will return. Future calls to `poll` will pick
-up where the previous one left off. This process continues until the future
-is able to successfully complete.
+Когда `poll` вызывается первый раз, он опрашивает 
+`fut_one`. Если `fut_one` не завершена, 
+возвращается `AsyncFuture::poll`. Следующие вызовы 
+`poll` будут начинаться там, где завершился 
+предыдущий вызов. Этот процесс продолжается до тех пор, пока 
+`future` не сможет завершиться.
 
 Однако, что будет, если `async` блок использует ссылки?
 Например:
@@ -88,12 +90,15 @@ struct AsyncFuture {
 }
 ```
 
-Here, the `ReadIntoBuf` future holds a reference into the other field of our
-structure, `x`. However, if `AsyncFuture` is moved, the location of `x` will
-move as well, invalidating the pointer stored in `read_into_buf_fut.buf`.
+Здесь `future` `ReadIntoBuf` содержит ссылку на другое 
+поле нашей структуры, `x`. Однако, если 
+`AsyncFuture` будет перемещена, положение 
+`x` тоже будет изменено, что инвалидирует указатель, 
+сохранённый в `read_into_buf_fut.buf`.
 
-Pinning futures to a particular spot in memory prevents this problem, making
-it safe to create references to values inside an `async` block.
+Закрепление future в определённом месте памяти, предотвращает 
+эту проблему, делая безопасным создание ссылок на данные за 
+пределами `async` блока.
 
 ## Как использовать закрепление
 
@@ -111,12 +116,17 @@ it safe to create references to values inside an `async` block.
 `Pin<&mut T>` ведёт себя также, как и 
 `&mut T`.
 
-Some functions require the futures they work with to be `Unpin`. To use a
-`Future` or `Stream` that isn't `Unpin` with a function that requires
-`Unpin` types, you'll first have to pin the value using either
-`Box::pin` (to create a `Pin<Box<T>>`) or the `pin_utils::pin_mut!` macro
-(to create a `Pin<&mut T>`). `Pin<Box<Fut>>` and `Pin<&mut Fut>` can both be
-used as futures, and both implement `Unpin`.
+Некоторые функции требуют, чтобы `future`, с которыми они 
+работают, были `Unpin`. Для использования 
+`Future` или `Stream`, не реализующего 
+`Unpin`, с функцией, требующей 
+`Unpin`-типа, вы сначала должны закрепить значение 
+при помощи `Box::pin` (для создания 
+`Pin<Box<T>>`) или макроса 
+`pin_utils::pin_mut!` (для создания 
+`Pin<&mut T>`). Оба `Pin<Box<Fut>>` и 
+`Pin<&mut Fut>` могут использоваться как` future`, и 
+оба реализуют `Unpin`.
 
 Например:
 
