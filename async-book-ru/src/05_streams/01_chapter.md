@@ -1,16 +1,14 @@
 # Типаж `Stream`
 
-The `Stream` trait is similar to `Future` but can yield multiple values before
-completing, similar to the `Iterator` trait from the standard library:
+Типаж `Stream` похож на `Future`, но может давать несколько значений до завершения, а также похож на типаж `Iterator` из стандартной библиотеки:
 
 ```rust
 {{#include ../../examples/05_01_streams/src/lib.rs:stream_trait}}
 ```
 
-One common example of a `Stream` is the `Receiver` for the channel type from
-the `futures` crate. It will yield `Some(val)` every time a value is sent
-from the `Sender` end, and will yield `None` once the `Sender` has been
-dropped and all pending messages have been received:
+Одним из распространённых примеров `Stream` является `Receiver` для типа канала из
+пакета `futures`. Это даёт `Some(val)` каждый раз, когда значение отправляется
+от `Sender`, и даст `None` после того, как `Sender` был удалён из памяти и все ожидающие сообщения были получены:
 
 ```rust
 {{#include ../../examples/05_01_streams/src/lib.rs:channels}}
