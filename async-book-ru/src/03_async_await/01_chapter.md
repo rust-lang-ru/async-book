@@ -6,8 +6,8 @@
 
 `async`/`.await` - это специальный синтаксис Rust, который позволяет передавать контроль выполнения в потоке другому коду, пока ожидается окончание завершения, а не блокировать поток.
 
-There are two main ways to use `async`: `async fn` and `async` blocks.
-Each returns a value that implements the `Future` trait:
+Существует два основных способа использования `async`: `async fn` и  `async` блоки.
+Каждый возвращает значение, реализующее типаж `Future` :
 
 ```rust
 {{#include ../../examples/03_01_async_await/src/lib.rs:async_fn_and_block_examples}}
@@ -17,7 +17,7 @@ Each returns a value that implements the `Future` trait:
 они ничего не делают, пока их не запустят. Наиболее распространённый способ запуска `Future` -
 это `.await`. Когда `.await` вызывается на `Future`, он пытается завершить выполнение до конца. Если `Future` заблокирована, то контроль будет передан текущему потоку. Чтобы добиться большего прогресса, будет выбрана верхняя `Future` исполнителя, позволяя `.await` продолжить работу.
 
-## `async` Lifetimes
+## Времена жизни `async`
 
 В отличие от традиционных функций, `async fn`, которые принимают ссылки или другие
 не-`'static` аргументы, возвращают `Future`, которая ограничена временем жизни
@@ -33,16 +33,15 @@ Each returns a value that implements the `Future` trait:
 (как в `foo(&x).await`) это не проблема. Однако, если сохранить `future`
 или отправить её в другую задачу или поток, это может быть проблемой.
 
-One common workaround for turning an `async fn` with references-as-arguments
-into a `'static` future is to bundle the arguments with the call to the
-`async fn` inside an `async` block:
+Один общий обходной путь для включения `async fn` со ссылками в аргументах
+в `'static` `future` состоит в том, чтобы связать аргументы с вызовом
+`async fn` внутри `async` блока:
 
 ```rust
 {{#include ../../examples/03_01_async_await/src/lib.rs:static_future_with_borrow}}
 ```
 
-By moving the argument into the `async` block, we extend its lifetime to match
-that of the `Future` returned from the call to `foo`.
+Перемещая аргумент в `async` блок, мы продлеваем его время жизни до времени жизни `Future`, которая возвращается при вызове `foo`.
 
 ## `async move`
 
@@ -54,7 +53,7 @@ that of the `Future` returned from the call to `foo`.
 {{#include ../../examples/03_01_async_await/src/lib.rs:async_move_examples}}
 ```
 
-## `.await`ing on a Multithreaded Executor
+## `.await` в многопоточном исполнителе
 
 Обратите внимание, что при использовании `Future` в многопоточном исполнителе, `Future` может перемещаться
 между потоками, поэтому любые переменные, используемые в телах `async`, должны иметь возможность перемещаться
@@ -63,8 +62,8 @@ that of the `Future` returned from the call to `foo`.
 Это означает, что не безопасно использовать `Rc`, `&RefCell` или любые другие типы, 
 не реализующие типаж `Send` (включая ссылки на типы, которые не реализуют типаж `Sync`).
 
-(Caveat: it is possible to use these types so long as they aren't in scope
-during a call to `.await`.)
+(Предостережение: можно использовать эти типы до тех пор, пока они не находятся в области действия
+вызова  `.await`.)
 
 Точно так же не очень хорошая идея держать традиционную `non-futures-aware` блокировку
 через `.await`, так как это может привести к блокировке пула потоков: одна задача может
