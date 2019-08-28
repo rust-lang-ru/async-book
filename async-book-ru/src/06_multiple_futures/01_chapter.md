@@ -1,14 +1,15 @@
 # Одновременное выполнение нескольких `Future` 
 
-Up until now, we've mostly executed futures by using `.await`, which blocks
-the current task until a particular `Future` completes. However, real
-asynchronous applications often need to execute several different
-operations concurrently.
+До этого времени, мы в основном выполняли `future` используя 
+`.await`, который блокирует текущую задачу до тех 
+пор, пока отдельная `Future` не завершится.
+Однако, настоящие асинхронные приложения чаще всего должны 
+выполнять несколько различных операций одновременно.
 
 В этой главе мы рассмотрим разные способы одновременного 
 выполнения нескольких асинхронных операций:
 
-- `join!`: waits for futures to all complete
-- `select!`: waits for one of several futures to complete
-- Spawning: creates a top-level task which ambiently runs a future to completion
-- `FuturesUnordered`: a group of futures which yields the result of each subfuture
+- `join!`: ждёт завершения всех `futures`
+- `select!`: ждёт завершения одной из `future`
+- Порождение: создание задач верхнего уровня, которые запускают `future` до их завершения
+- `FuturesUnordered`: группа `future`, которые возвращают результат каждой subfuture
