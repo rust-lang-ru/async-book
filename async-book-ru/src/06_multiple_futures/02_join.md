@@ -3,8 +3,8 @@
 Макрос `futures::join` позволяет дождаться завершения нескольких разных
 `futures` при одновременном их выполнении.
 
-When performing multiple asynchronous operations, it's tempting to simply
-`.await` them in a series:
+При выполнении нескольких асинхронных операций возникает соблазн просто
+сделать несколько `.await` последовательно:
 
 ```rust
 {{#include ../../examples/06_02_join/src/lib.rs:naiive}}
@@ -29,8 +29,7 @@ When performing multiple asynchronous operations, it's tempting to simply
 {{#include ../../examples/06_02_join/src/lib.rs:join}}
 ```
 
-The value returned by `join!` is a tuple containing the output of each
-`Future` passed in.
+Значение, возвращаемое `join!` - это кортеж, содержащий выходные данные каждой из переданных `Future`.
 
 ## `try_join!`
 
@@ -38,8 +37,8 @@ The value returned by `join!` is a tuple containing the output of each
 `join!`. Так как `join!` завершается только после завершения всех `subfutures`,
 он будет продолжать обрабатывать другие `futures` даже после одного из своих `subfutures` или вернёт ошибку `Err`.
 
-Unlike `join!`, `try_join!` will complete immediately if one of the subfutures
-returns an error.
+В отличие от`join!`, `try_join!` завершится немедленно, если одна из `subfutures`
+вернёт ошибку.
 
 ```rust
 {{#include ../../examples/06_02_join/src/lib.rs:try_join}}
