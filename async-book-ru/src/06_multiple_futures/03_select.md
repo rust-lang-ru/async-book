@@ -8,12 +8,14 @@
 {{#include ../../examples/06_03_select/src/lib.rs:example}}
 ```
 
-The function above will run both `t1` and `t2` concurrently. When either
-`t1` or `t2` finishes, the corresponding handler will call `println!`, and
-the function will end without completing the remaining task.
+Функция выше запустит обе `t1` и `t2` 
+параллельно. Когда `t1` или `t2` 
+закончится, соответствующий дескриптор вызовет 
+`println!` и функция завершится без выполнения 
+оставшейся задачи.
 
-The basic syntax for `select` is `<pattern> = <expression> => <code>,`,
-repeated for as many futures as you would like to `select` over.
+Базовый синтаксис для `select`: `<pattern> = <expression> => <code>,`, 
+повторяемый столько раз, из скольких `future` вам надо сделать `select`.
 
 ## `default => ...` и `complete => ...`
 
@@ -25,9 +27,10 @@ repeated for as many futures as you would like to `select` over.
 незамедлительно завершаться, так как `default` будет 
 запущена, когда ещё ни одна `future` не готова.
 
-`complete` branches can be used to handle the case where all futures
-being `select`ed over have completed and will no longer make progress.
-This is often handy when looping over a `select!`.
+Ветка `complete` может быть использована для 
+обработки случая, когда все `futures`, бывшие в 
+`select`, завершились и уже не могут прогрессировать 
+дальше. Это бывает удобно, при использовании `select!` в цикле.
 
 ```rust
 {{#include ../../examples/06_03_select/src/lib.rs:default_and_complete}}
@@ -35,25 +38,22 @@ This is often handy when looping over a `select!`.
 
 ## Взаимодействие с `Unpin` и `FusedFuture`
 
-One thing you may have noticed in the first example above is that we
-had to call `.fuse()` on the futures returned by the two `async fn`s,
-as well as pinning them with `pin_mut`. Both of these calls are necessary
-because the futures used in `select` must implement both the `Unpin`
-trait and the `FusedFuture` trait.
+Одна вещь, на которую вы могли обратить внимание в первом 
+примере, это то, что мы вызвали `.fuse()` на `futures`, 
+возвращённых из двух `async fn`, а потом закрепили 
+их с помощью `pin_mut`. Оба этих вызова важны, 
+потому что `future`, используемая в `select`, должна 
+реализовывать и типаж `Unpin`, и типаж 
+`FusedFuture`.
 
-`Unpin` is necessary because the futures used by `select` are not
-taken by value, but by mutable reference. By not taking ownership
-of the future, uncompleted futures can be used again after the
-call to `select`.
+`Unpin` важен по той причине, что `future`, используемые в `select`, берутся не по значению, а по изменяемой ссылке. Так как владение `future` никому не передано, незавершённые `futures` могут быть снова использованы после вызова `select`.
 
-Similarly, the `FusedFuture` trait is required because `select` must
-not poll a future after it has completed. `FusedFuture` is implemented
-by futures which track whether or not they have completed. This makes
-it possible to use `select` in a loop, only polling the futures which
-still have yet to complete. This can be seen in the example above,
-where `a_fut` or `b_fut` will have completed the second time through
-the loop. Because the future returned by `future::ready` implements
-`FusedFuture`, it's able to tell `select` not to poll it again.
+Аналогично, типаж `FusedFuture` необходим, так как `select` не должен опрашивать `future` после их 
+завершения. `FusedFuture` реализуется `future`, которые отслеживают, завершены ли они или нет. Это делает 
+возможным использование `select` в цикле, опрашивая только `future`, которые до сих пор не завершились. 
+Это можно увидеть в примере выше, где `a_fut` или `b_fut` будут завершены во второй раз за цикл. Так 
+как `future`, возвращённая `future::ready`, реализует `FusedFuture`, она может сообщить 
+`select`, что её не надо снова опрашивать.
 
 Заметьте, что у `stream` есть соответствующий типаж `FusedStream`. `Stream`, реализующие этот типаж 
 или имеющие обёртку, созданную `.fuse()`, возвращают `FusedFuture` из их комбинаторов 
@@ -63,7 +63,7 @@ the loop. Because the future returned by `future::ready` implements
 {{#include ../../examples/06_03_select/src/lib.rs:fused_stream}}
 ```
 
-## Concurrent tasks in a `select` loop with `Fuse` and `FuturesUnordered`
+## Распараллелтвание задач в цикле с `select` с помощью `Fuse` и `FuturesUnordered`
 
 Одна довольно труднодоступная, но удобная функция - `Fuse::terminated()`, которая позволяет создавать уже 
 прекращённые пустые `future`, которые в последствии могут быть заполнены другой `future`, которую надо запустить.
