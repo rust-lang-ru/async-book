@@ -9,7 +9,3 @@ create-missing = false
 
 [output.html]
 google-analytics="UA-142155799-7"
-
-[output.linkcheck]
-follow-web-links = true
-traverse-parent-directories = false
