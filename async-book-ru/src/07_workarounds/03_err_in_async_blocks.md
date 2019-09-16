@@ -28,10 +28,10 @@ error[E0282]: type annotations needed
   |         ^^^^^^^^^^^^ cannot infer type
 ```
 
-Unfortunately, there's currently no way to "give `fut` a type", nor a way
-to explicitly specify the return type of an `async` block.
-To work around this, use the "turbofish" operator to supply the success and
-error types for the `async` block:
+К сожалению, сейчас не способа "задать `fut` тип" 
+кроме как явно указать возвращаемый тип `async` 
+блока. Для обработки этого, используйте "turbofish" оператор для 
+предоставления типов ошибки и успеха `async` блока:
 
 ```rust
 let fut = async {
