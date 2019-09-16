@@ -1,8 +1,9 @@
 # Рекурсия
 
-Internally, `async fn` creates a state machine type containing each
-sub-`Future` being `.await`ed. This makes recursive `async fn`s a little
-tricky, since the resulting state machine type has to contain itself:
+Под капотом, `async fn` создаёт тип конечного автомата, содержащий каждую `subfuture` 
+для который был вызван `.await`. Из-за этого 
+рекурсивные `async fn` становятся более сложными, 
+так как итоговый конечный автомат содержит сам себя:
 
 ```rust
 // Эта функция:
@@ -29,8 +30,8 @@ enum Recursive {
 }
 ```
 
-This won't work-- we've created an infinitely-sized type!
-The compiler will complain:
+Это не работает - мы создали тип бесконечного размера! 
+Компилятор будет жаловаться:
 
 ```
 error[E0733]: recursion in an `async fn` requires boxing
