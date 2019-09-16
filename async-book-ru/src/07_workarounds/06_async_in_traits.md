@@ -6,8 +6,9 @@
 
 Однако вы можете обойти это ограничение при помощи [пакета `async_trait` с crates.io](https://github.com/dtolnay/async-trait).
 
-Note that using these trait methods will result in a heap allocation
-per-function-call. This is not a significant cost for the vast majority
-of applications, but should be considered when deciding whether to use
-this functionality in the public API of a low-level function that is expected
-to be called millions of times a second.
+Заметьте, что использование этих методов типажей приведёт к 
+выделениям памяти в куче для каждого вызова функции. Это не 
+значительная стоимость для большинства приложений, но следует 
+это учитывать при принятии решения использовать данную 
+функциональность в публичном API низкоуровневых функций, 
+которые будут вызываться миллион раз в секунду.
