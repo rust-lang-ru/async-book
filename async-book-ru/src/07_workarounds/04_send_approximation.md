@@ -19,8 +19,10 @@ use std::rc::Rc;
 struct NotSend(Rc<()>);
 ```
 
-Variables of type `NotSend` can briefly appear as temporaries in `async fn`s
-even when the resulting `Future` type returned by the `async fn` must be `Send`:
+Переменные типа `NotSend` могут появляться как 
+временные внутри `async fn` даже когда тип `Future`, 
+возвращаемой из `async fn` должен быть 
+`Send`:
 
 ```rust
 async fn bar() {}
@@ -72,11 +74,14 @@ error: aborting due to previous error
 For more information about this error, try `rustc --explain E0277`.
 ```
 
-This error is correct. If we store `x` into a variable, it won't be dropped
-until after the `.await`, at which point the `async fn` may be running on
-a different thread. Since `Rc` is not `Send`, allowing it to travel across
-threads would be unsound. One simple solution to this would be to `drop`
-the `Rc` before the `.await`, but unfortunately that does not work today.
+Эта ошибка корректна. Если мы сохраним `x` в 
+переменную, она не будет удалена пока не будет завершён 
+`.await`. В этот момент `async fn` может 
+быть запущена в другом потоке. Пока `Rc` не 
+является `Send`, перемещение между потоками будет 
+некорректным. Простым решением будет вызов 
+`drop` у `Rc` до вызова 
+`.await`, но к сожалению пока что это не работает.
 
 Для того, чтобы успешно обойти эту проблему, вы можете создать 
 блок, инкапсулирующий любые не-`Send` 
