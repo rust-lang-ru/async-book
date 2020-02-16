@@ -2,7 +2,7 @@
 
 Давайте используем `async`/`.await` для создания эхо-сервера!
 
-Для начала, запустите `rustup update stable` чтобы  быть уверенным, что используете стабильную версию Rust - 1.39 или более новую. Когда вы закончите это, создайте новый проект с  помощ`ь cargo new async-await-ec`ho и  откройте созданную директор`ию async-await-e`cho.
+Для начала, запустите `rustup update stable` чтобы  быть уверенным, что используете стабильную версию Rust - 1.39 или более новую. Когда вы закончите это, создайте новый проект с  помощь `cargo new async-await-echo` и откройте созданную директорию `async-await-echo`.
 
 Добавим некоторые зависимости в файл `Cargo.toml`:
 
@@ -30,7 +30,7 @@
 println!("Got request at {:?}", req.uri());
 ```
 
-Вы могли заметить, что мы до сих пор не делали ничего  асинхронного для обработки запроса - мы только незамедлительно  ответили на него, мы не пользуемся гибкостью, которую нам даё`т  async` fn. Вместо этого, мы только возвращаем  статическое сообщение. Давайте попробуем проксировать  пользовательский запрос на другой web-сайт используя  HTTP-клиент Hyper'а.
+Вы могли заметить, что мы до сих пор не делали ничего асинхронного для обработки запроса - мы только незамедлительно ответили на него, мы не пользуемся гибкостью, которую нам даёт `async fn`. Вместо этого, мы только возвращаем статическое сообщение. Давайте попробуем проксировать пользовательский запрос на другой web-сайт используя HTTP-клиент Hyper'а.
 
 Мы начнём с парсинга URL, который мы хотим запросить:
 
@@ -44,7 +44,7 @@ println!("Got request at {:?}", req.uri());
 {{#include ../../examples/01_05_http_server/src/lib.rs:get_request}}
 ```
 
-`Client::get` returns a `hyper::client::ResponseFuture`, which implements `Future<Output = Result<Response<Body>>>` (or `Future<Item = Response<Body>, Error = Error>` in futures 0.1 terms). When we `.await` that future, an HTTP request is sent out, the current task is suspended, and the task is queued to be continued once a response has become available.
+`Client::get` возвращает  `hyper::client::ResponseFuture`, который реализует  `Future<Output = Result<Response<Body>>>`  (или `Future<Item = Response<Body>, Error = Error>` в  терминах `futures` 0.1). Когда мы разрешаем (`.await`)  футуру, отправляется HTTP-запрос, текущая задача  приостанавливается и становится в очередь, чтобы продолжить  работу после получения ответа.
 
 Если вы сейчас запустите `cargo run` и откроете `http://127.0.0.1:3000/foo` в браузере, вы увидите домашнюю страницу Rust, а в консоли следующий вывод:
 
