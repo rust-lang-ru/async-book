@@ -33,13 +33,13 @@ futures = "0.3"
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_decl}}
 ```
 
-Let's also add a method to spawner to make it easy to spawn new futures. This method will take a future type, box it, and create a new `Arc<Task>` with it inside which can be enqueued onto the executor.
+Давайте ещё добавим метод в spawner, чтобы было проще создавать новые футуры. Этот метод возьмет тип футуры, поместит его в коробку и создаст новую задачу `Arc<Task>` с ним внутри. И эта задача может быть помещена в очередь для исполнителя.
 
 ```rust,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
-Чтобы опросить `futures`, нам нужно создать `Waker`. Как описано в разделе [задачи пробуждения](./03_wakeups.md), `Waker`s отвечают за планирование задач, которые будут опрошены снова после вызова `wake`. `Waker`s сообщают исполнителю, какая именно задача завершилась, позволяя опрашивать как раз те `futures`, которые готовы к продолжению выполнения. Простой способ создать новый `Waker`, необходимо реализовать типаж `ArcWake`, а затем использовать `waker_ref` или `.into_waker()` функции для преобразования `Arc<impl ArcWake>` в `Waker`. Давайте реализуем `ArcWake` для наших задач, чтобы они были превращены в `Waker`s и могли пробуждаться:
+Чтобы опросить `futures`, нам нужно создать `Waker`. Как описано в разделе [задачи пробуждения], `Waker`s отвечают за планирование задач, которые будут опрошены снова после вызова `wake`. `Waker`s сообщают исполнителю, какая именно задача завершилась, позволяя опрашивать как раз те `futures`, которые готовы к продолжению выполнения. Простой способ создать новый `Waker`, необходимо реализовать типаж `ArcWake`, а затем использовать `waker_ref` или `.into_waker()` функции для преобразования `Arc<impl ArcWake>` в `Waker`. Давайте реализуем `ArcWake` для наших задач, чтобы они были превращены в `Waker`s и могли пробуждаться:
 
 ```rust,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
@@ -56,3 +56,6 @@ Let's also add a method to spawner to make it easy to spawn new futures. This me
 ```rust,edition2018,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:main}}
 ```
+
+
+[задачи пробуждения]: ./03_wakeups.md
