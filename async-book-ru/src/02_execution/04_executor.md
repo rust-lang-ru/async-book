@@ -51,7 +51,7 @@ Let's also add a method to spawner to make it easy to spawn new futures. This me
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_run}}
 ```
 
-Поздравляю! Теперь у нас есть работающий исполнитель. Мы даже можем использовать его для запуска `async/.await` кода и пользовательских футур, таких как `TimerFuture`, которую мы написали ранее:
+Поздравляю! Теперь у нас есть работающий исполнитель `futures`. Мы даже можем использовать его для запуска `async/.await` кода и пользовательских `futures`, таких как `TimerFuture` которую мы описали ранее:
 
 ```rust,edition2018,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:main}}
