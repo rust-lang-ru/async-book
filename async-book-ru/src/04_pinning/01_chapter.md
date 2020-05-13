@@ -1,6 +1,6 @@
 # Закрепление (pinning)
 
-To poll futures, they must be pinned using a special type called `Pin<T>`. If you read the explanation of [the `Future` trait](../02_execution/02_future.md) in the previous section ["Executing `Future`s and Tasks"](../02_execution/01_chapter.md), you'll recognise `Pin` from the `self: Pin<&mut Self>` in the `Future::poll` method's definition. But what does it mean, and why do we need it?
+Чтобы опросить футуры, они должны быть закреплены с помощью специального типа `Pin<T>` . Если вы прочитали объяснение [  `Future`] в предыдущем разделе [ «Выполнение `Future` и задач»], вы узнаете `Pin` из `self: Pin<&mut Self>` в определении метода `Future::poll`. Но что это значит, и зачем нам это нужно?
 
 ## Для чего нужно закрепление
 
@@ -69,7 +69,14 @@ async {
 Во что скомпилируется эта структура?
 
 ```rust,ignore
-struct ReadIntoBuf<'a> {     buf: &'a mut [u8], // указывает на `x` далее }  struct AsyncFuture {     x: [u8; 128],     read_into_buf_fut: ReadIntoBuf<'?>, // какое тут время жизни? }
+struct ReadIntoBuf<'a> {
+    buf: &'a mut [u8], // указывает на `x` далее
+}
+
+struct AsyncFuture {
+     x: [u8; 128],
+     read_into_buf_fut: ReadIntoBuf<'?>, // какое тут время жизни?
+}
 ```
 
 Здесь `future` `ReadIntoBuf` содержит ссылку на другое  поле нашей структуры, `x`. Однако, если  `AsyncFuture` будет перемещена, положение  `x` тоже будет изменено, что инвалидирует указатель,  сохранённый в `read_into_buf_fut.buf`.
@@ -105,3 +112,7 @@ let fut = async { /* ... */ };
 pin_mut!(fut);
 execute_unpin_future(fut); // OK
 ```
+
+
+[ «Выполнение `Future` и задач»]: ../02_execution/01_chapter.md
+[  `Future`]: ../02_execution/02_future.md
