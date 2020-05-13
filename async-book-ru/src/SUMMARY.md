@@ -14,7 +14,7 @@
 - [Закрепление (pinning)](04_pinning/01_chapter.md)
 - [Потоки](05_streams/01_chapter.md)
     - [Итерирование и параллелизм](05_streams/02_iteration_and_concurrency.md)
-- [Одновременное выполнение нескольких `Future` ](06_multiple_futures/01_chapter.md)
+- [Одновременное выполнение нескольких `Future`](06_multiple_futures/01_chapter.md)
     - [`join!`](06_multiple_futures/02_join.md)
     - [`select!`](06_multiple_futures/03_select.md)
     - [TODO: Порождение](404.md)
