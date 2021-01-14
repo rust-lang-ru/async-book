@@ -134,7 +134,8 @@ impl Test {
     }
 
     fn b(&self) -> &String {
-        unsafe {&*(self.b)}
+        assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+        unsafe { &*(self.b) }
     }
 }
 ```
@@ -183,7 +184,8 @@ fn main() {
 #     }
 #
 #     fn b(&self) -> &String {
-#         unsafe {&*(self.b)}
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+#         unsafe { &*(self.b) }
 #     }
 # }
 ```
@@ -233,7 +235,8 @@ fn main() {
 #     }
 #
 #     fn b(&self) -> &String {
-#         unsafe {&*(self.b)}
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+#         unsafe { &*(self.b) }
 #     }
 # }
 ```
@@ -297,7 +300,8 @@ fn main() {
 #     }
 #
 #     fn b(&self) -> &String {
-#         unsafe {&*(self.b)}
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+#         unsafe { &*(self.b) }
 #     }
 # }
 ```
@@ -322,7 +326,7 @@ called `Unpin`. Pointers to `Unpin` types can be freely placed into or taken
 out of `Pin`. For example, `u8` is `Unpin`, so `Pin<&mut u8>` behaves just like
 a normal `&mut u8`.
 
-However, types that can't be moved after they're pinned has a marker called
+However, types that can't be moved after they're pinned have a marker called
 `!Unpin`. Futures created by async/await is an example of this.
 
 ### Pinning to the Stack
@@ -361,6 +365,7 @@ impl Test {
     }
 
     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+        assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
         unsafe { &*(self.b) }
     }
 }
@@ -418,6 +423,7 @@ pub fn main() {
 #     }
 #
 #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
 # }
@@ -469,6 +475,7 @@ pub fn main() {
 #     }
 #
 #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
 # }
@@ -529,6 +536,7 @@ The type system prevents us from moving the data.
 > #     }
 > #
 > #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+> #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 > #         unsafe { &*(self.b) }
 > #     }
 > # }
