@@ -251,7 +251,7 @@ a: test1, b: test1
 But instead we get:
 
 ```rust, ignore
-a: test1, b: test1
+a: test2, b: test1
 a: test1, b: test2
 ```
 
@@ -319,7 +319,7 @@ Let's see how pinning and the `Pin` type can help us solve this problem.
 
 The `Pin` type wraps pointer types, guaranteeing that the values behind the
 pointer won't be moved. For example, `Pin<&mut T>`, `Pin<&T>`,
-`Pin<Box<T>>` all guarantee that `T` won't be moved if `T: !Unpin`.
+`Pin<Box<T>>` all guarantee that `T` won't be moved even if `T: !Unpin`.
 
 Most types don't have a problem being moved. These types implement a trait
 called `Unpin`. Pointers to `Unpin` types can be freely placed into or taken
