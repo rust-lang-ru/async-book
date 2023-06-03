@@ -1,10 +1,10 @@
 # Финальный проект: Создание конкурентного веб-сервера с асинхронным Rust
 
-In this chapter, we'll use asynchronous Rust to modify the Rust book's [single-threaded web server](https://doc.rust-lang.org/book/ch20-01-single-threaded.html) to serve requests concurrently.
+В этой главе мы будем использовать асинхронный Rust для модификации [однопоточного веб-сервера](https://doc.rust-lang.org/book/ch20-01-single-threaded.html) из книги Rust для одновременного обслуживания запросов.
 
-## Recap
+## Резюме
 
-Here's what the code looked like at the end of the lesson.
+Вот как выглядел код в конце урока.
 
 `src/main.rs`:
 
@@ -24,4 +24,4 @@ Here's what the code looked like at the end of the lesson.
 {{#include ../../examples/09_01_sync_tcp_server/404.html}}
 ```
 
-If you run the server with `cargo run` and visit `127.0.0.1:7878` in your browser, you'll be greeted with a friendly message from Ferris!
+Если вы запустите сервер с помощью `cargo run` и посетите `127.0.0.1:7878` в своем браузере, вас встретит дружеское сообщение от Ferris!
