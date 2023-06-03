@@ -1,28 +1,19 @@
-# Handling Connections Concurrently
-The problem with our code so far is that `listener.incoming()` is a blocking iterator.
-The executor can't run other futures while `listener` waits on incoming connections,
-and we can't handle a new connection until we're done with the previous one.
+# Конкурентная обработка подключений
 
-In order to fix this, we'll transform `listener.incoming()` from a blocking Iterator
-to a non-blocking Stream. Streams are similar to Iterators, but can be consumed asynchronously.
-For more information, see the [chapter on Streams](../05_streams/01_chapter.md).
+Проблема с нашим кодом на данный момент заключается в том, что `listener.incoming()` является блокирующим итератором. Исполнитель не может запускать другие футуры, пока `listener` ожидает входящих соединений, и мы не можем обрабатывать новое соединение, пока не закончим с предыдущим.
 
-Let's replace our blocking `std::net::TcpListener` with the non-blocking `async_std::net::TcpListener`,
-and update our connection handler to accept an `async_std::net::TcpStream`:
+In order to fix this, we'll transform `listener.incoming()` from a blocking Iterator to a non-blocking Stream. Streams are similar to Iterators, but can be consumed asynchronously. For more information, see the [chapter on Streams](../05_streams/01_chapter.md).
+
+Let's replace our blocking `std::net::TcpListener` with the non-blocking `async_std::net::TcpListener`, and update our connection handler to accept an `async_std::net::TcpStream`:
+
 ```rust,ignore
 {{#include ../../examples/09_04_concurrent_tcp_server/src/main.rs:handle_connection}}
 ```
 
-The asynchronous version of `TcpListener` implements the `Stream` trait for `listener.incoming()`,
-a change which provides two benefits.
-The first is that `listener.incoming()` no longer blocks the executor.
-The executor can now yield to other pending futures 
-while there are no incoming TCP connections to be processed.
+Асинхронная версия `TcpListener` реализует трейт `Stream` для `listener.incoming()`, это изменение дает два преимущества. Во-первых, `listener.incoming()` больше не блокирует исполнителя. Теперь исполнитель может перейти к другим ожидающим футурам, пока нет входящих TCP-соединений для обработки.
 
-The second benefit is that elements from the Stream can optionally be processed concurrently,
-using a Stream's `for_each_concurrent` method.
-Here, we'll take advantage of this method to handle each incoming request concurrently.
-We'll need to import the `Stream` trait from the `futures` crate, so our Cargo.toml now looks like this:
+Второе преимущество заключается в том, что элементы из Stream могут обрабатываться конкурентно с помощью метода `for_each_concurrent`. Здесь мы воспользуемся этим методом для конкурентной обработки каждого входящего запроса. Нам нужно импортировать трейт `Stream` из крейта `futures`, поэтому наш Cargo.toml теперь выглядит так:
+
 ```diff
 +[dependencies]
 +futures = "0.3"
@@ -32,23 +23,18 @@ We'll need to import the `Stream` trait from the `futures` crate, so our Cargo.t
  features = ["attributes"]
 ```
 
-Now, we can handle each connection concurrently by passing `handle_connection` in through a closure function.
-The closure function takes ownership of each `TcpStream`, and is run as soon as a new `TcpStream` becomes available.
-As long as `handle_connection` does not block, a slow request will no longer prevent other requests from completing.
+Теперь мы можем обрабатывать каждое соединение конкурентно, передавая `handle_connection` через замыкание. Замыкание становится владельцем каждого `TcpStream` и запускается, как только становится доступным новый `TcpStream`. Поскольку `handle_connection` не блокирующий, медленный запрос больше не будет препятствовать выполнению других запросов.
+
 ```rust,ignore
 {{#include ../../examples/09_04_concurrent_tcp_server/src/main.rs:main_func}}
 ```
+
 # Serving Requests in Parallel
-Our example so far has largely presented concurrency (using async code)
-as an alternative to parallelism (using threads).
-However, async code and threads are not mutually exclusive.
-In our example, `for_each_concurrent` processes each connection concurrently, but on the same thread.
-The `async-std` crate allows us to spawn tasks onto separate threads as well.
-Because `handle_connection` is both `Send` and non-blocking, it's safe to use with `async_std::task::spawn`.
-Here's what that would look like:
+
+В нашем примере до сих пор конкурентность (с использованием асинхронного кода) в основном представлялась как альтернатива параллелизму (с использованием потоков). Однако асинхронный код и потоки не исключают друг друга. В нашем примере `for_each_concurrent` обрабатывает каждое соединение, но в одном потоке. `async-std` также позволяет нам запускать задачи в отдельных потоках. Поскольку `handle_connection` является `Send` и неблокирующий, его безопасно использовать с `async_std::task::spawn`. Вот как это будет выглядеть:
+
 ```rust
 {{#include ../../examples/09_05_final_tcp_server/src/main.rs:main_func}}
 ```
-Now we are using both concurrency and parallelism to handle multiple requests at the same time!
-See the [section on multithreaded executors](../08_ecosystem/00_chapter.md#single-threading-vs-multithreading)
-for more information.
+
+Теперь мы используем конкурентность и параллелизм для одновременной обработки нескольких запросов! Дополнительную информацию см. в [разделе о многопоточных исполнителях](../08_ecosystem/00_chapter.md#single-threading-vs-multithreading).
