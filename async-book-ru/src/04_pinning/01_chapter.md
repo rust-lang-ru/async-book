@@ -1,6 +1,6 @@
 # Закрепление
 
-Чтобы можно было опросить футуры, они должны быть закреплены с помощью специального типа `Pin<T>`. Если вы прочитали объяснение [ типажа `Future`](../02_execution/02_future.md) в предыдущем разделе [«Выполнение `Future` и задач»](../02_execution/01_chapter.md), вы узнаете `Pin` из `self: Pin<&mut Self>` в определении метода `Future::poll`. Но что это значит, и зачем нам это нужно?
+Чтобы можно было опросить футуры, они должны быть закреплены с помощью специального типа `Pin<T>`. Если вы прочитали объяснение [ типажа `Future`] в предыдущем разделе [«Выполнение `Future` и задач»], вы узнаете `Pin` из `self: Pin<&mut Self>` в определении метода `Future::poll`. Но что это значит, и зачем нам это нужно?
 
 ## Для чего нужно закрепление
 
@@ -224,7 +224,7 @@ a: test1, b: test1
 a: test1, b: test1
 ```
 
-But instead we get:
+Но вместо этого получаем:
 
 ```rust,
 a: test1, b: test1
@@ -233,7 +233,7 @@ a: test1, b: test2
 
 Указатель на `test2.b` по-прежнему указывает на старое местоположение, которое сейчас находится внутри `test1`. Структура больше не является самореферентной, она содержит указатель на поле в другом объекте. Это означает, что мы больше не можем рассчитывать, что время жизни `test2.b` будет привязано к времени жизни `test2` .
 
-If you're still not convinced, this should at least convince you:
+Если вы все еще не убеждены, то по крайней мере это должно убедить вас:
 
 ```rust
 fn main() {
@@ -278,17 +278,17 @@ fn main() {
 # }
 ```
 
-The diagram below can help visualize what's going on:
+Диаграмма ниже может помочь визуализировать происходящее:
 
 **Из. 1: До и после замены** ![swap_problem](https://github.com/rust-lang-ru/async-book/blob/master/async-book-ru/src/assets/swap_problem.jpg?raw=true)
 
-It's easy to get this to show undefined behavior and fail in other spectacular ways as well.
+Здесь легко получить неопределенное поведение и другие ошеломляющие ошибки.
 
 ## Как использовать закрепление
 
-Let's see how pinning and the `Pin` type can help us solve this problem.
+Давайте посмотрим, как закрепление и тип `Pin` могут помочь нам решить эту проблему.
 
-The `Pin` type wraps pointer types, guaranteeing that the values behind the pointer won't be moved if it is not implementing `Unpin`. For example, `Pin<&mut T>`, `Pin<&T>`, `Pin<Box<T>>` all guarantee that `T` won't be moved if `T: !Unpin`.
+Тип `Pin` оборачивает типы указателей, гарантируя, что значения за указателем не будут перемещены, если он не реализует `Unpin` . Например, `Pin<&mut T>`, `Pin<&T>`, `Pin<Box<T>>` гарантируют, что `T` не будет перемещен, если `T: !Unpin`.
 
 У большинства типов нет проблем с перемещением, так как они реализуют типаж `Unpin`. Указатели на типы `Unpin` можно свободно помещать в `Pin` или извлекать из него. Например, `u8` реализует `Unpin`, поэтому `Pin<&mut u8>` ведет себя так же, как обычный `&mut u8`.
 
@@ -296,7 +296,7 @@ The `Pin` type wraps pointer types, guaranteeing that the values behind the poin
 
 ### Закрепление на стеке
 
-Back to our example. We can solve our problem by using `Pin`. Let's take a look at what our example would look like if we required a pinned pointer instead:
+Вернемся к нашему примеру. Мы можем решить нашу проблему, используя `Pin`. Давайте посмотрим, как выглядел бы наш пример, если бы вместо этого нам требовался закрепленный указатель:
 
 ```rust,
 use std::pin::Pin;
@@ -336,7 +336,7 @@ impl Test {
 }
 ```
 
-Закрепление объекта на стеке всегда будет `unsafe`, если наш тип реализует `!Unpin`. Вы можете использовать такой крейт, как [`pin_utils`](https://docs.rs/pin-utils/), чтобы избежать написания собственного `unsafe` кода при закреплении в стеке.
+Закрепление объекта на стеке всегда будет `unsafe`, если наш тип реализует `!Unpin`. Вы можете использовать такой крейт, как [`pin_utils`], чтобы избежать написания собственного `unsafe` кода при закреплении в стеке.
 
 Ниже мы закрепляем объекты `test1` и `test2` на стеке:
 
@@ -573,7 +573,7 @@ pub fn main() {
 
 Некоторые функции требуют, чтобы футуры, с которыми они работают, были `Unpin`. Чтобы использовать `Future` или `Stream`, которые не являются `Unpin`, с функцией, требующей `Unpin`-тип, вам сначала нужно закрепить значение с помощью `Box::pin`, создав `Pin<Box<T>>`, или макроса `pin_utils::pin_mut!`, создав `Pin<&mut T>`. `Pin<Box<Fut>>` и `Pin<&mut Fut>` могут использоваться как футуры, и оба реализуют `Unpin`.
 
-For example:
+Например:
 
 ```rust,edition2018,ignore
 use pin_utils::pin_mut; // `pin_utils` -- это удобный крейт из crates.io
@@ -595,7 +595,7 @@ pin_mut!(fut);
 execute_unpin_future(fut); // OK
 ```
 
-## Summary
+## Резюме
 
 1. Если `T: Unpin` (что по умолчанию), то `Pin<'a, T>` полностью эквивалентен `&'a mut T`. Другими словами: `Unpin` означает, что этот тип можно перемещать, даже если он закреплен, поэтому `Pin` не повлияет на такой тип.
 
@@ -612,3 +612,8 @@ execute_unpin_future(fut); // OK
 7. Закрепление объекта `!Unpin` на куче не требует `unsafe`, для этого есть сокращение `Box::pin`.
 
 8. Для закреплённых данных, где `T: !Unpin`, вы должны поддерживать инвариант, что их память не будет аннулирована или переназначена *с момента закрепления до вызова drop*. Это важная часть *контракта pin*.
+
+
+[«Выполнение `Future` и задач»]: ../02_execution/01_chapter.md
+[ типажа `Future`]: ../02_execution/02_future.md
+[`pin_utils`]: https://docs.rs/pin-utils/
