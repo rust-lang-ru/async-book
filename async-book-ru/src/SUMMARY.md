@@ -34,4 +34,4 @@
 - [TODO: Паттерны асинхронного дизайна: решения и предложения](404.md)
     - [TODO: Моделирование серверов и паттерн Request/Response](404.md)
     - [TODO: Управление общим состоянием](404.md)
-- [Appendix: Translations of the Book](12_appendix/01_translations.md)
+- [Приложение: Переводы книги](12_appendix/01_translations.md)
