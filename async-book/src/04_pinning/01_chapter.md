@@ -101,7 +101,7 @@ it safe to create references to values inside an `async` block.
 
 ## Pinning in Detail
 
-Let's try to understand pinning by using an slightly simpler example. The problem we encounter
+Let's try to understand pinning by using a slightly simpler example. The problem we encounter
 above is a problem that ultimately boils down to how we handle references in self-referential
 types in Rust.
 
@@ -139,7 +139,7 @@ impl Test {
 ```
 
 `Test` provides methods to get a reference to the value of the fields `a` and `b`. Since `b` is a
-reference to `a` we store it as a pointer since the borrowing rules of Rust doesn't allow us to
+reference to `a` we store it as a pointer since the borrowing rules of Rust don't allow us to
 define this lifetime. We now have what we call a self-referential struct.
 
 Our example works fine if we don't move any of our data around as you can observe by running
@@ -553,10 +553,12 @@ note: required by a bound in `std::pin::Pin::<&'a mut T>::get_mut`
 > #         this.b = self_ptr;
 > #     }
 > #
+> #     #[allow(unused)]
 > #     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
 > #         &self.get_ref().a
 > #     }
 > #
+> #     #[allow(unused)]
 > #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
 > #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 > #         unsafe { &*(self.b) }
