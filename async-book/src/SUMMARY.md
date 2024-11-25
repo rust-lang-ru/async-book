@@ -2,17 +2,17 @@
 
 [Introduction](intro.md)
 
-- [Navigation]()
-  - [By topic]()
+- [Navigation](navigation/intro.md)
+  - [By topic](navigation/topics.md)
   - [FAQs]()
-  - [Index]()
+  - [Index](navigation/index.md)
 
 # Part 1: guide
 
 - [Introduction](part-guide/intro.md)
 - [Concurrent programming](part-guide/concurrency.md)
 - [Async and await](part-guide/async-await.md)
-- [Advanced async/await topics](part-guide/adv-async-await.md)
+- [More async/await topics](part-guide/more-async-await.md)
 - [IO and issues with blocking](part-guide/io.md)
 - [Concurrency primitives](part-guide/concurrency-primitives.md)
 - [Channels, locking, and synchronization](part-guide/sync.md)
@@ -62,7 +62,6 @@
   - [TODO: Cancellation and Timeouts]()
   - [TODO: `FuturesUnordered`]()
 - [Workarounds to Know and Love](07_workarounds/01_chapter.md)
-  - [`?` in `async` Blocks](07_workarounds/02_err_in_async_blocks.md)
   - [`Send` Approximation](07_workarounds/03_send_approximation.md)
   - [Recursion](07_workarounds/04_recursion.md)
   - [`async` in Traits](07_workarounds/05_async_in_traits.md)
