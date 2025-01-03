@@ -31,6 +31,7 @@ jobs:
           echo "$file was changed"
         done
     - uses: funkill/spellcheck-github-actions@hunspell-support-action
+      if: steps.changed_files.outputs.any_changed == 'true'
       with:
         task_name: Markdown
         source_files: ${{ steps.changed_files.outputs.all_changed_files }}
